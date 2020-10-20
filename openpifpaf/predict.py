@@ -8,6 +8,7 @@ import os
 
 import PIL
 import torch
+import numpy as np
 
 from . import datasets, decoder, network, show, transforms, visualizer, __version__
 
@@ -35,6 +36,8 @@ def cli():
                         help='show image of output overlay')
     parser.add_argument('--image-output', default=None, nargs='?', const=True,
                         help='image output file or directory')
+    parser.add_argument('--fields-output', default=False, action='store_true',
+                        help='output fields to file')
     parser.add_argument('--json-output', default=None, nargs='?', const=True,
                         help='json output file or directory')
     parser.add_argument('--batch-size', default=1, type=int,
@@ -168,10 +171,10 @@ def main():
     annotation_painter = show.AnnotationPainter(keypoint_painter=keypoint_painter)
 
     for batch_i, (image_tensors_batch, _, meta_batch) in enumerate(data_loader):
-        pred_batch = processor.batch(model, image_tensors_batch, device=args.device)
+        pred_batch, fields_batch = processor.batch(model, image_tensors_batch, device=args.device)
 
         # unbatch
-        for pred, meta in zip(pred_batch, meta_batch):
+        for pred, meta, fields in zip(pred_batch, meta_batch, fields_batch):
             LOG.info('batch %d: %s', batch_i, meta['file_name'])
 
             # load the original image if necessary
@@ -201,6 +204,12 @@ def main():
                                        fig_width=args.figure_width,
                                        dpi_factor=args.dpi_factor) as ax:
                     annotation_painter.annotations(ax, pred)
+
+            if args.fields_output:
+
+                fields_out_name = out_name(True, meta['file_name'], '.fields.npy')
+                LOG.debug('fields output = %s', fields_out_name)
+                np.save(fields_out_name, np.array(fields))
 
 
 if __name__ == '__main__':

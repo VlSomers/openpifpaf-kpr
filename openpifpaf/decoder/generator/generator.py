@@ -104,7 +104,7 @@ class Generator:
         self.last_decoder_time = time.perf_counter() - start_decoder
 
         LOG.debug('time: nn = %.3fs, dec = %.3fs', self.last_nn_time, self.last_decoder_time)
-        return result
+        return result, fields_batch
 
     def _mappable_annotations(self, fields, debug_image):
         if debug_image is not None:
