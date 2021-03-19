@@ -1,0 +1,168 @@
+python3 -m openpifpaf.predict /Users/vladimirsomersprivate/datasets/reid/mars/bbox_train/1429/1429C2T0008F190.jpg --image-output /Users/vladimirsomersprivate/Downloads/
+python3 -m openpifpaf.predict /Users/vladimirsomersprivate/datasets/reid/mars/bbox_train/1429/*.jpg --image-output /Users/vladimirsomersprivate/Downloads/
+
+python3 -m openpifpaf.predict /Users/vladimirsomersprivate/datasets/experiments/pifpaf_on_mars/test_set/*.jpg --image-output /Users/vladimirsomersprivate/datasets/experiments/pifpaf_on_mars/results
+python3 -m openpifpaf.predict /Users/vladimirsomersprivate/datasets/experiments/pifpaf_on_mars/test_set/*.jpg --image-output /Users/vladimirsomersprivate/datasets/experiments/pifpaf_on_mars/results --line-width 10  --dpi-factor 3 --figure-width 30
+
+python3 -m openpifpaf.predict /Users/vladimirsomersprivate/datasets/experiments/pifpaf_on_mars/test_visualization/*.jpg --image-output /Users/vladimirsomersprivate/datasets/experiments/pifpaf_on_mars/test_visualization --line-width 10  --dpi-factor 10 --show-joint-scales --show-joint-confidences --show-decoding-order --show-frontier-order --checkpoint shufflenetv2k30w
+
+
+python3 -m openpifpaf.predict /Users/vladimirsomersprivate/datasets/experiments/pifpaf_on_mars/test_visualization/*.jpg \
+--image-output /Users/vladimirsomersprivate/datasets/experiments/pifpaf_on_mars/test_visualization \
+--checkpoint shufflenetv2k30w \
+--line-width 10 --dpi-factor 30 --figure-width 30 --show-joint-scales --show-joint-confidences --show-decoding-order --show-frontier-order \
+--debug-images --debug --debug-cifhr --debug-cif-c --debug-cif-v --debug-cifdet-c --debug-cifdet-v --debug-caf-c --debug-caf-v \
+--debug-indices cif:5 \
+--dense-connections --force-complete-pose
+
+python3 -m openpifpaf.predict /Users/vladimirsomersprivate/datasets/experiments/pifpaf_on_mars/test_visualization/*.jpg \
+--image-output /Users/vladimirsomersprivate/datasets/experiments/pifpaf_on_mars/test_visualization \
+--checkpoint shufflenetv2k30w --line-width 10 --dpi-factor 30 --figure-width 30 \
+--show-joint-scales --show-joint-confidences --show-decoding-order --show-frontier-order \
+--debug-cifhr --debug-cif-c --debug-cif-v --debug-cifdet-c --debug-cifdet-v --debug-caf-c --debug-caf-v \
+--debug-indices cif:5 cif:7 cif:9 cif:11 \
+--debug-indices caf:1 caf:5 \
+--debug-images --debug \
+--dense-connections
+--force-complete-pose
+
+python3 -m openpifpaf.predict /Users/vladimirsomersprivate/datasets/experiments/pifpaf_on_mars/test_visualization/*.jpg \
+--image-output /Users/vladimirsomersprivate/datasets/experiments/pifpaf_on_mars/test_visualization \
+--checkpoint shufflenetv2k30w --line-width 10 --dpi-factor 30 --figure-width 30 \
+--show-joint-scales --show-joint-confidences --show-decoding-order --show-frontier-order \
+--debug-caf-c \
+--debug-indices caf:0 caf:1 caf:2 caf:3 caf:4 caf:5 caf:6 caf:7 caf:8 caf:9 caf:10 caf:11 caf:12 caf:13 caf:14 caf:15 caf:16 caf:17 caf:18 \
+--debug-indices caf:1 caf:5 \
+--debug-images --debug \
+--dense-connections \
+--force-complete-pose
+
+python3 -m openpifpaf.predict /Users/vladimirsomersprivate/datasets/experiments/pifpaf_on_mars/test_visualization/*.jpg \
+--image-output /Users/vladimirsomersprivate/datasets/experiments/pifpaf_on_mars/test_visualization \
+--checkpoint shufflenetv2k30w --line-width 10 --dpi-factor 30 --figure-width 30 \
+--show-joint-scales --show-joint-confidences --show-decoding-order --show-frontier-order \
+--debug-caf-c \
+--debug-indices caf:0 caf:1 caf:2 caf:3 caf:4 caf:5 caf:6 caf:7 caf:8 caf:9 caf:10 caf:11 caf:12 caf:13 caf:14 caf:15 caf:16 caf:17 caf:18 \
+--dense-connections \
+--force-complete-pose
+
+python3 -m openpifpaf.predict /Users/vladimirsomersprivate/datasets/experiments/pifpaf_on_mars/test_visualization/f14_bb7.png \
+--image-output /Users/vladimirsomersprivate/datasets/experiments/pifpaf_on_mars/test_visualization \
+--checkpoint shufflenetv2k30w --line-width 10 --dpi-factor 30 --figure-width 30 \
+--show-joint-scales --show-joint-confidences --show-decoding-order --show-frontier-order \
+--debug-caf-c \
+--debug-indices caf:0 caf:1 caf:2 caf:3 caf:4 caf:5 caf:6 caf:7 caf:8 caf:9 caf:10 caf:11 caf:12 caf:13 caf:14 caf:15 caf:16 caf:17 caf:18 \
+--debug-indices caf:1 caf:5 \
+--debug-images --debug \
+--dense-connections \
+--force-complete-pose
+
+pose visualizer:
+  --debug-cifhr // joint confidence gaussian? (orange point)
+  --debug-cif-c // joint confidence map
+  --debug-cif-v // joint orange box (???)
+  --debug-cifdet-c // ???????
+  --debug-cifdet-v // ??????????????
+  --debug-caf-c // parts confidence map
+  --debug-caf-v // parts vectors associations
+  --debug-indices
+
+python3 -m openpifpaf.video --source /Users/vladimirsomersprivate/Downloads/my_vid_gravelines2018_panoramic_view.mp4 --video-output --json-output
+python3 -m openpifpaf.video --source /Users/vladimirsomersprivate/Downloads/my_vid_strasbourg2018_panoramic_view.mp4 --video-output --json-output
+
+python3 -m openpifpaf.video \
+--source /Users/vladimirsomersprivate/Downloads/short.mp4 \
+--video-output /Users/vladimirsomersprivate/Downloads/short-pifpaf.mp4 \
+--json-output /Users/vladimirsomersprivate/Downloads/short-pifpaf.json \
+--checkpoint shufflenetv2k30w --show-box \
+--scale 4 \
+--skip-frames 100
+
+## GENERATE GIF SEQUENCES
+
+python3 -m openpifpaf.predict /Users/vladimirsomersprivate/Downloads/seq9/*.jpg \
+--image-output /Users/vladimirsomersprivate/Downloads/seq9/ \
+--line-width 2 --dpi-factor 3 --figure-width 2 \
+--show-joint-confidences --show-frontier-order
+
+## GENERATE OCCLUDED DUKE QUERY POSES
+
+source ~/.virtualenvs/openpifpaf/bin/activate
+
+python3 -m openpifpaf.predict /home/vso/experiments/occluded_duke_queries/query/*.jpg \
+--image-output /home/vso/experiments/occluded_duke_queries/results/ \
+--line-width 2 --dpi-factor 3 --figure-width 2 \
+--show-joint-confidences --show-frontier-order
+
+python3 -m openpifpaf.predict ~/test.jpg --fields-output --debug
+
+## Basketball panorama
+python3 -m openpifpaf.predict /Users/vladimirsomersprivate/Google\ Drive/PhD/Experiments/Pifpaf-basketball/*.png \
+--image-output "/Users/vladimirsomersprivate/Google Drive/PhD/Experiments/Pifpaf-basketball/" \
+--line-width 1 --dpi-factor 3 --show-only-decoded-connections
+
+
+python3 -m openpifpaf.predict ~/test.jpg --image-output ~/test-pose.jpg \
+--line-width 2 --dpi-factor 3 --figure-width 2 \
+--show-joint-confidences --show-frontier-order --fields-output --debug
+
+## TEST MARS HEATMAPS CREATION
+
+python3 -m openpifpaf.predict /Users/vladimirsomersprivate/Google\ Drive/PhD/Experiments/Pifpaf-Mars/confidence_maps_for_some_samples/*.jpg \
+--image-output /Users/vladimirsomersprivate/Google\ Drive/PhD/Experiments/Pifpaf-Mars/confidence_maps_for_some_samples/ \
+--fields-output --debug --json-output --batch-size 8 --long-edge 256
+
+python3 -m openpifpaf.predict ~/test.jpg --fields-output --debug
+python3 -m openpifpaf.predict /Users/vladimirsomersprivate/datasets/reid/market1501/Market-1501-v15.09.15/bounding_box_train/0528_c1s3_007046_04.jpg --fields-output --debug
+
+## GENERATE MARKET1501 PIFPAF
+source ~/.virtualenvs/openpifpaf/bin/activate
+
+find /home/vso/datasets/reid/market1501-pifpaf/Market-1501-v15.09.15 -maxdepth 1 -type d | xargs -n 1 -I path echo path'/*.jpg' \
+ | xargs -n 1 -I path python3 -m openpifpaf.predict --glob path --fields-output
+
+
+python3 -m openpifpaf.predict /home/vso/datasets/reid/market1501-pifpaf/Market-1501-v15.09.15/gt_bbox/*.jpg --fields-output --debug
+
+## GENERATE SYNERGY PIFPAF
+
+find /Users/vladimirsomersprivate/datasets/reid/synergy -mindepth 3 -maxdepth 3 -type d | xargs -n 1 -I path echo path'/*.png' \
+ | xargs -n 1 -I path python3 -m openpifpaf.predict --glob path --fields-output --debug
+
+
+python3 -m openpifpaf.predict --glob /Users/vladimirsomersprivate/datasets/reid/synergy/**/**/**/*.png --fields-output --debug
+
+### GENERATE DukeMTMC PIFPAF
+
+source ~/.virtualenvs/openpifpaf/bin/activate
+
+find /home/vso/datasets/reid/dukemtmc-reid/DukeMTMC-reID -maxdepth 1 -type d | xargs -n 1 -I path echo path'/*.jpg' \
+ | xargs -n 1 -I path python3 -m openpifpaf.predict --glob path --fields-output
+
+### GENERATE DukeMTMC PIFPAF
+
+source ~/.virtualenvs/openpifpaf/bin/activate
+
+find /home/vso/datasets/reid/msmt17/MSMT17_V1 -maxdepth 2 -type d | xargs -n 1 -I path echo path'/*.jpg' \
+ | xargs -n 1 -I path python3 -m openpifpaf.predict --glob path --fields-output
+
+
+### GENERATE Occluded DukeMTMC PIFPAF
+
+source ~/.virtualenvs/openpifpaf/bin/activate
+
+find /home/vso/datasets/reid/Occluded_Duke -maxdepth 2 -type d | xargs -n 1 -I path echo path'/*.jpg' \
+ | xargs -n 1 -I path python3 -m openpifpaf.predict --glob path --fields-output
+
+
+### GENERATE Occluded Reid PIFPAF
+
+source ~/.virtualenvs/openpifpaf/bin/activate
+
+find /home/vso/datasets/reid/Partial_REID -maxdepth 3 -type d | xargs -n 1 -I path echo path'/*.jpg' \
+ | xargs -n 1 -I path python3 -m openpifpaf.predict --glob path --fields-output
+
+ find /home/vso/datasets/reid/Partial_iLIDS -maxdepth 3 -type d | xargs -n 1 -I path echo path'/*.jpg' \
+ | xargs -n 1 -I path python3 -m openpifpaf.predict --glob path --fields-output
+
+

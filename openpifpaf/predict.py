@@ -5,15 +5,25 @@ import glob
 import json
 import logging
 import os
+import copy
 
 import PIL
+import math
 import torch
 import numpy as np
+import matplotlib
+import cv2
 
 from . import datasets, decoder, network, show, transforms, visualizer, __version__
 
 LOG = logging.getLogger(__name__)
 
+try:
+    import matplotlib.cm
+    CMAP_JET = copy.copy(matplotlib.cm.get_cmap('jet'))
+    CMAP_JET.set_bad('white', alpha=0.5)
+except ImportError:
+    CMAP_JET = None
 
 def cli():
     parser = argparse.ArgumentParser(
@@ -85,8 +95,12 @@ def cli():
 
     # glob
     if args.glob:
+        # print("GLOOOOOOOOOOOB")
+        # print(args.glob)
+        print(glob.glob(args.glob))
         args.images += glob.glob(args.glob)
     if not args.images:
+        # print(args.glob)
         raise Exception("no image files given")
 
     # add args.device
@@ -207,9 +221,109 @@ def main():
 
             if args.fields_output:
 
-                fields_out_name = out_name(True, meta['file_name'], '.fields.npy')
-                LOG.debug('fields output = %s', fields_out_name)
-                np.save(fields_out_name, np.array(fields))
+                # TODO refactor into beautiful code
+                # output only confidence for parts and joint into 19+17 channels V
+                # Try compressed jpeg as output X
+                # display, for 20 examples images, parts and joint together and separately
+                # try batch processing
+                # also output json V
+
+                # paf_confidence_map_out_name = out_name(True, meta['file_name'], '.paf.jpg')
+                # LOG.debug('PAF confidence map output = %s', paf_confidence_map_out_name)
+                # paf_confidence_map = np.max(fields[1][:, 0, :, :], 0)
+                # # paf_confidence_map = fields[1][1, 0, :, :]
+                # show_heatmap(cpu_image, paf_confidence_map, paf_confidence_map_out_name)
+                #
+                # pif_confidence_map_out_name = out_name(True, meta['file_name'], '.pif.jpg')
+                # LOG.debug('PIF confidence map output = %s', pif_confidence_map_out_name)
+                # pif_confidence_map = np.max(fields[0][:, 0, :, :], 0)
+                # show_heatmap(cpu_image, pif_confidence_map, pif_confidence_map_out_name)
+                #
+                # fields_out_name = out_name(True, meta['file_name'], '.fields.npy')
+                # LOG.debug('fields output = %s', fields_out_name)
+                # np.save(fields_out_name, np.asanyarray(fields))
+
+
+
+                ## FOR CEDRIC, WHAT YOU ARE INTERESTED IN :
+                confidence_fields = np.concatenate((fields[0][:, 0, :, :], fields[1][:, 0, :, :]), axis=0)
+                confidence_fields_out_name = out_name(True, meta['file_name'], '.confidence_fields.npy')
+                LOG.debug('confidence fields output = %s', confidence_fields_out_name)
+                np.save(confidence_fields_out_name, confidence_fields)
+                ##########################################
+
+
+
+                # for i in range(0, fields[0].shape[0]):
+                #     confidence_map_out_name = out_name(True, meta['file_name'], '.pif_confidence_field_' + str(i) + '.jpg')
+                #     LOG.debug('confidence fields output = %s', confidence_map_out_name)
+                #     show_heatmap(cpu_image, fields[0][i, 0, :, :], confidence_map_out_name)
+                #
+                # for i in range(0, fields[1].shape[0]):
+                #     confidence_map_out_name = out_name(True, meta['file_name'], '.paf_confidence_field_' + str(i) + '.png')
+                #     LOG.debug('confidence fields output = %s', confidence_map_out_name)
+                #     show_heatmap(cpu_image, fields[1][i, 0, :, :], confidence_map_out_name)
+                #
+                # confidence_fields_compressed_out_name = out_name(True, meta['file_name'], '.confidence_fields_compressed.npy')
+                # np.savez_compressed(confidence_fields_compressed_out_name, confidence_fields)
+                #
+                #
+                # test_out_name = out_name(True, meta['file_name'], '.image.npy')
+                # np.save(test_out_name, np.asanyarray(cpu_image))
+                # compress_out_name = out_name(True, meta['file_name'], '.image_compressed.npy')
+                # np.savez_compressed(compress_out_name, np.asanyarray(cpu_image))
+
+                # fields[1, :, 0]
+                # im = ax.imshow(self.scale_scalar(confidences[f], self.stride),
+                #                alpha=0.9, vmin=0.0, vmax=1.0, cmap=CMAP_BLUES_NAN)
+                # self.colorbar(ax, im)
+
+                ################################
+                # CODE FOR GENERATING BOUNDING BOXES AND POSE FROM WIDE IMAGES
+                # for i, ann in enumerate(pred):
+                #     # get bounding box
+                #     x, y, w, h = ann.bbox()
+                #     xs = x
+                #     ys = y
+                #     xe = x+w
+                #     ye = y+h
+                #     scale = 0.1
+                #     xs = max(0, xs - w*scale)
+                #     ys = max(0, ys - h*scale)
+                #     xe = min(cpu_image.size[0], xe + w*scale)
+                #     ye = min(cpu_image.size[1], ye + h*scale)
+                #     xs = math.floor(xs)
+                #     ys = math.floor(ys)
+                #     xe = math.ceil(xe)
+                #     ye = math.ceil(ye)
+                #
+                #     # crop fields and image
+                #     image_crop = cpu_image.crop((xs, ys, xe, ye))
+                #     confidence_fields = np.concatenate((fields[0][:, 0, :, :], fields[1][:, 0, :, :]), axis=0)
+                #     confidence_fields = np.transpose(confidence_fields, (1, 2, 0))
+                #     confidence_fields = cv2.resize(confidence_fields, dsize=cpu_image.size, interpolation=cv2.INTER_LINEAR)
+                #     confidence_fields = np.transpose(confidence_fields, (2, 0, 1))
+                #     confidence_fields_crop = confidence_fields[:, ys:ye, xs:xe]
+                #
+                #     # write crop image to disk
+                #     path, filename = os.path.split(meta['file_name'])
+                #     dirname = os.path.join(os.path.dirname(path), "bounding_boxes")
+                #     if not os.path.exists(dirname):
+                #         os.makedirs(dirname)
+                #     image_crop_out_name = os.path.join(dirname, '{}_bb_{}.png'.format(os.path.splitext(filename)[0], i))
+                #     LOG.debug('image_crop output = %s', image_crop_out_name)
+                #     image_crop.save(image_crop_out_name)
+                #
+                #     # write crop fields to disk
+                #     fields_crop_out_name = image_crop_out_name + '.confidence_fields.npy'
+                #     LOG.debug('fields_crop output = %s', fields_crop_out_name)
+                #     np.save(fields_crop_out_name, confidence_fields_crop)
+
+
+def show_heatmap(cpu_image, paf_confidence_map, paf_confidence_map_out_name):
+    with show.image_canvas(cpu_image, fig_file=paf_confidence_map_out_name, margin=[0.0, 0.01, 0.05, 0.01], show=False) as ax:
+        ax.imshow(visualizer.base.BaseVisualizer.scale_scalar(paf_confidence_map, 8), alpha=0.2, vmin=0.0, vmax=1.0,
+                  cmap=CMAP_JET)
 
 
 if __name__ == '__main__':
