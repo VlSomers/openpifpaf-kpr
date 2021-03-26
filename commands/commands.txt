@@ -94,6 +94,35 @@ python3 -m openpifpaf.predict /home/vso/experiments/occluded_duke_queries/query/
 --line-width 2 --dpi-factor 3 --figure-width 2 \
 --show-joint-confidences --show-frontier-order
 
+## TEST LOCAL OCCLUDED DUKE QUERY POSES
+
+python3 -m openpifpaf.predict /Users/vladimirsomersprivate/Experiments/occluded_duke_queries/pifpaf/samples/3763_c5_f0208101.jpg \
+--image-output /Users/vladimirsomersprivate/Experiments/occluded_duke_queries/pifpaf/results \
+--line-width 2 --dpi-factor 2 --figure-width 2 \
+--show-joint-confidences --show-frontier-order \
+--fields-output /Users/vladimirsomersprivate/Experiments/occluded_duke_queries/pifpaf/results \
+--json-output /Users/vladimirsomersprivate/Experiments/occluded_duke_queries/pifpaf/results \
+--checkpoint shufflenetv2k30w \
+--force-complete-pose
+
+python3 -m openpifpaf.predict /Users/vladimirsomersprivate/Experiments/occluded_duke_queries/pifpaf/samples/*.jpg \
+--image-output /Users/vladimirsomersprivate/Experiments/occluded_duke_queries/pifpaf/results \
+--line-width 2 --dpi-factor 2 --figure-width 2 \
+--show-joint-confidences --show-frontier-order \
+--fields-output /Users/vladimirsomersprivate/Experiments/occluded_duke_queries/pifpaf/results \
+--json-output /Users/vladimirsomersprivate/Experiments/occluded_duke_queries/pifpaf/results \
+--checkpoint shufflenetv2k30w \
+--force-complete-pose
+
+python3 -m openpifpaf.predict /Users/vladimirsomersprivate/Downloads/test_pifpaf/samples/3763_c5_f0208101.jpg \
+--image-output /Users/vladimirsomersprivate/Downloads/test_pifpaf/results \
+--line-width 2 --dpi-factor 3 --figure-width 2 \
+--show-joint-confidences --show-frontier-order \
+--fields-output --debug --json-output \
+--debug-caf-c \
+--debug-indices caf:5 \
+--debug-images --debug
+
 python3 -m openpifpaf.predict ~/test.jpg --fields-output --debug
 
 ## Basketball panorama

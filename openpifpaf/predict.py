@@ -46,8 +46,8 @@ def cli():
                         help='show image of output overlay')
     parser.add_argument('--image-output', default=None, nargs='?', const=True,
                         help='image output file or directory')
-    parser.add_argument('--fields-output', default=False, action='store_true',
-                        help='output fields to file')
+    parser.add_argument('--fields-output', default=None, nargs='?', const=True,
+                        help='pifpaf fields output file or directory')
     parser.add_argument('--json-output', default=None, nargs='?', const=True,
                         help='json output file or directory')
     parser.add_argument('--batch-size', default=1, type=int,
@@ -219,41 +219,55 @@ def main():
                                        dpi_factor=args.dpi_factor) as ax:
                     annotation_painter.annotations(ax, pred)
 
-            if args.fields_output:
+            if args.fields_output is not None:
 
-                # TODO refactor into beautiful code
-                # output only confidence for parts and joint into 19+17 channels V
-                # Try compressed jpeg as output X
-                # display, for 20 examples images, parts and joint together and separately
-                # try batch processing
-                # also output json V
+                paf_confidence_map_out_name = out_name(args.fields_output, meta['file_name'], '.paf_max.jpg')
+                LOG.debug('PAF confidence map output = %s', paf_confidence_map_out_name)
+                paf_confidence_map = np.max(fields[1][:, 0, :, :], 0)
+                # paf_confidence_map = fields[1][1, 0, :, :]
+                show_heatmap(cpu_image, paf_confidence_map, paf_confidence_map_out_name)
 
-                # paf_confidence_map_out_name = out_name(True, meta['file_name'], '.paf.jpg')
+                pif_confidence_map_out_name = out_name(args.fields_output, meta['file_name'], '.pif_max.jpg')
+                LOG.debug('PIF confidence map output = %s', pif_confidence_map_out_name)
+                pif_confidence_map = np.max(fields[0][:, 0, :, :], 0)
+                show_heatmap(cpu_image, pif_confidence_map, pif_confidence_map_out_name)
+
+
+                # paf_confidence_map_out_name = out_name(args.fields_output, meta['file_name'], '.paf_sum.jpg')
                 # LOG.debug('PAF confidence map output = %s', paf_confidence_map_out_name)
-                # paf_confidence_map = np.max(fields[1][:, 0, :, :], 0)
+                # paf_confidence_map = np.sum(fields[1][:, 0, :, :], 0)
                 # # paf_confidence_map = fields[1][1, 0, :, :]
                 # show_heatmap(cpu_image, paf_confidence_map, paf_confidence_map_out_name)
                 #
-                # pif_confidence_map_out_name = out_name(True, meta['file_name'], '.pif.jpg')
+                # pif_confidence_map_out_name = out_name(args.fields_output, meta['file_name'], '.pif_sum.jpg')
                 # LOG.debug('PIF confidence map output = %s', pif_confidence_map_out_name)
-                # pif_confidence_map = np.max(fields[0][:, 0, :, :], 0)
+                # pif_confidence_map = np.sum(fields[0][:, 0, :, :], 0)
                 # show_heatmap(cpu_image, pif_confidence_map, pif_confidence_map_out_name)
-                #
+
                 # fields_out_name = out_name(True, meta['file_name'], '.fields.npy')
                 # LOG.debug('fields output = %s', fields_out_name)
                 # np.save(fields_out_name, np.asanyarray(fields))
 
+                ## Dump pif map :
+                pif_map = fields[0]
+                pif_map_out_name = out_name(args.fields_output, meta['file_name'], '.pif.npy')
+                LOG.debug('pif map output = %s', pif_map_out_name)
+                np.save(pif_map_out_name, pif_map)
+
+                ## Dump paf map :
+                paf_map = fields[1]
+                paf_map_out_name = out_name(args.fields_output, meta['file_name'], '.paf.npy')
+                LOG.debug('paf map output = %s', paf_map_out_name)
+                np.save(paf_map_out_name, paf_map)
 
 
-                ## FOR CEDRIC, WHAT YOU ARE INTERESTED IN :
-                confidence_fields = np.concatenate((fields[0][:, 0, :, :], fields[1][:, 0, :, :]), axis=0)
-                confidence_fields_out_name = out_name(True, meta['file_name'], '.confidence_fields.npy')
-                LOG.debug('confidence fields output = %s', confidence_fields_out_name)
-                np.save(confidence_fields_out_name, confidence_fields)
-                ##########################################
+                # ## Dump confidence fields :
+                # confidence_fields = np.concatenate((fields[0][:, 0, :, :], fields[1][:, 0, :, :]), axis=0)
+                # confidence_fields_out_name = out_name(True, meta['file_name'], '.confidence_fields.npy')
+                # LOG.debug('confidence fields output = %s', confidence_fields_out_name)
+                # np.save(confidence_fields_out_name, confidence_fields)
 
-
-
+                # DISPLAY BODY PARTS HEATMAPS INDIVIDUALLY
                 # for i in range(0, fields[0].shape[0]):
                 #     confidence_map_out_name = out_name(True, meta['file_name'], '.pif_confidence_field_' + str(i) + '.jpg')
                 #     LOG.debug('confidence fields output = %s', confidence_map_out_name)
@@ -263,7 +277,10 @@ def main():
                 #     confidence_map_out_name = out_name(True, meta['file_name'], '.paf_confidence_field_' + str(i) + '.png')
                 #     LOG.debug('confidence fields output = %s', confidence_map_out_name)
                 #     show_heatmap(cpu_image, fields[1][i, 0, :, :], confidence_map_out_name)
-                #
+
+
+
+
                 # confidence_fields_compressed_out_name = out_name(True, meta['file_name'], '.confidence_fields_compressed.npy')
                 # np.savez_compressed(confidence_fields_compressed_out_name, confidence_fields)
                 #
@@ -322,7 +339,7 @@ def main():
 
 def show_heatmap(cpu_image, paf_confidence_map, paf_confidence_map_out_name):
     with show.image_canvas(cpu_image, fig_file=paf_confidence_map_out_name, margin=[0.0, 0.01, 0.05, 0.01], show=False) as ax:
-        ax.imshow(visualizer.base.BaseVisualizer.scale_scalar(paf_confidence_map, 8), alpha=0.2, vmin=0.0, vmax=1.0,
+        ax.imshow(visualizer.base.BaseVisualizer.scale_scalar(paf_confidence_map, 8), alpha=0.4, vmin=0.0, vmax=1.0,
                   cmap=CMAP_JET)
 
 
