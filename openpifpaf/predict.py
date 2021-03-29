@@ -210,7 +210,7 @@ def main():
 
             if args.show or args.image_output is not None:
                 image_out_name = out_name(
-                    args.image_output, meta['file_name'], '.predictions.png')
+                    args.image_output, meta['file_name'], '.predictions.jpg')
                 LOG.debug('image output = %s', image_out_name)
                 with show.image_canvas(cpu_image,
                                        image_out_name,
