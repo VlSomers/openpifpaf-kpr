@@ -221,13 +221,13 @@ def main():
 
             if args.fields_output is not None:
 
-                paf_confidence_map_out_name = out_name(args.fields_output, meta['file_name'], '.paf_max.jpg')
+                paf_confidence_map_out_name = out_name(args.image_output, meta['file_name'], '.paf_max.jpg')
                 LOG.debug('PAF confidence map output = %s', paf_confidence_map_out_name)
                 paf_confidence_map = np.max(fields[1][:, 0, :, :], 0)
                 # paf_confidence_map = fields[1][1, 0, :, :]
                 show_heatmap(cpu_image, paf_confidence_map, paf_confidence_map_out_name)
 
-                pif_confidence_map_out_name = out_name(args.fields_output, meta['file_name'], '.pif_max.jpg')
+                pif_confidence_map_out_name = out_name(args.image_output, meta['file_name'], '.pif_max.jpg')
                 LOG.debug('PIF confidence map output = %s', pif_confidence_map_out_name)
                 pif_confidence_map = np.max(fields[0][:, 0, :, :], 0)
                 show_heatmap(cpu_image, pif_confidence_map, pif_confidence_map_out_name)
